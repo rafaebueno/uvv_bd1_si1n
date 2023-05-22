@@ -1,6 +1,6 @@
 # **UVV BANCO DE DADOS I TURMA SI1N**
 
-##### Aluna: *Rafael de Jesus Bueno Pereira.*
+##### Aluno: *Rafael de Jesus Bueno Pereira.*
 ##### Matrícula: 202305860
 ##### Professor: *Abrantes Araújo Silva Filho.*
 
