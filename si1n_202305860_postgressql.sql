@@ -1,16 +1,18 @@
 -- ALUNO: RAFAEL DE JESUS BUENO PEREIRA
 -- TURMA: SI1N
 
+-- Criei meu usuário com a senha encriptada, já com o atributo de login e com a permissão de criação de banco de dados.
+
 CREATE USER     rafael_bueno
                 WITH ENCRYPTED PASSWORD 'admin'
                 LOGIN
                 CREATEDB;
 
--- Criei meu usuário com a senha encriptada, já com o atributo de login e com a permissão de criação de banco de dados.
+-- Criei uma condicional para a exclusão do banco de dados UVV, caso já exista.
 
 DROP DATABASE IF EXISTS uvv;
 
--- Criei uma condicional para a exclusão do banco de dados UVV, caso já exista.
+-- Cria um banco de dados, com os atributos solicitados pelo professor, já com o dono no meu usuário criado anteriormente.
 
 CREATE DATABASE uvv
                 OWNER=rafael_bueno
@@ -20,57 +22,55 @@ CREATE DATABASE uvv
                 LC_CTYPE 'pt_BR.UTF-8'
                 ALLOW_CONNECTIONS TRUE;
 
--- Cria um banco de dados, com os atributos solicitados pelo professor, já com o dono no meu usuário criado anteriormente.
+-- Dou todas as permissões e privilégios do banco de dados para meu usuário.
 
 GRANT ALL PRIVILEGES ON DATABASE uvv TO rafael_bueno;
 
--- Dou todas as permissões e privilégios do banco de dados para meu usuário.
-
-\c "dbname=uvv user=rafael_bueno password=admin";
 
 -- Conecto no banco de dados criado usando meu usuário já com a senha.
 
-DROP SCHEMA IF EXISTS lojas;
+\c "dbname=uvv user=rafael_bueno password=admin";
 
 -- Condicional para exclusão do esquema Lojas, se já estiver criado.
+
+DROP SCHEMA IF EXISTS lojas;
+
+-- Crio o esquema lojas.
 
 CREATE SCHEMA lojas
 AUTHORIZATION rafael_bueno;
 
--- Crio o esquema lojas.
+-- Comando para saber qual esquema esta sendo usado.
 
 SELECT CURRENT_SCHEMA ();
 
--- Comando para saber qual esquema esta sendo usado.
-
-SHOW SEARCH_PATH;
-
 -- Comando para saber qual path esta sendo usado.
 
-SET SEARCH_PATH TO lojas, "$user", public;
-
--- Comando para setar o hr como path principal a ser usado.
-
 SHOW SEARCH_PATH;
 
--- Comando para confirmar que o path a estar sendo usado é o hr.
+-- Comando para setar o lojas como path principal a ser usado.
 
 SET SEARCH_PATH TO lojas, "$user", public;
+
+-- Comando para confirmar que o path a estar sendo usado é o lojas.
+
+SHOW SEARCH_PATH;
 
 -- Comando para alterar o user que esta sendo usado para fazer os comandos.
 
+SET SEARCH_PATH TO lojas, "$user", public;
 
--- Criação das tabelas em geral.
-CREATE TABLE    produtos (
-                produto_id 						NUMERIC(38) NOT NULL,
-                nome 							VARCHAR(255) NOT NULL,
-                preco_unitario 					        NUMERIC(10,2) NOT NULL,
-                detalhes                                                BYTEA,
-                imagem                                                  BYTEA,
-                imagem_mime_type 				        VARCHAR(512),
-                imagem_arquivo 					        VARCHAR(512) NOT NULL,
-                imagem_charset 					        VARCHAR(512),
-                imagem_ultima_atualizacao 		                DATE,
+-- Criação da tabela produtos para ter controle dos produtos registrados.
+CREATE TABLE produtos (
+                produto_id              NUMERIC(38)     NOT NULL,
+                nome                    VARCHAR(255)    NOT NULL,
+                preco_unitario          NUMERIC(10,2)   NOT NULL,
+                detalhes                BYTEA,
+                imagem                  BYTEA,
+                imagem_mime_type        VARCHAR(512),
+                imagem_arquivo          VARCHAR(512)    NOT NULL,
+                imagem_charset          VARCHAR(512),
+                imagem_ultima_atualizacao DATE,
                 CONSTRAINT produto_id_pk PRIMARY KEY (produto_id)
 );
 
@@ -90,19 +90,19 @@ COMMENT ON COLUMN produtos.imagem_mime_type IS 'Formato da imagem';
 
 COMMENT ON COLUMN produtos.imagem_arquivo IS 'Arquivo da imagem';
 
-COMMENT ON COLUMN produtos.imagem_charset IS 'Codificação da imagem do produto';
+COMMENT ON COLUMN produtos.imagem_charset IS 'Codificação da imagem';
 
 COMMENT ON COLUMN produtos.imagem_ultima_atualizacao IS 'Última atualização da imagem do produto';
 
--- Criação da tabela produtos, com as especificações de cada produto registrado.
+-- Criação da tabela clientes para ter controle dos dados de contato de cada cliente.
 
-CREATE TABLE    clientes (
-                cliente_id 						NUMERIC(38) NOT NULL,
-                email 							VARCHAR(255) NOT NULL,
-                nome 							VARCHAR(255) NOT NULL,
-                telefone1 						VARCHAR(20),
-                telefone2 						VARCHAR(20),
-                telefone3 						VARCHAR(20),
+CREATE TABLE clientes (
+                cliente_id              NUMERIC(38)     NOT NULL,
+                email                   VARCHAR(255)    NOT NULL,
+                nome                    VARCHAR(255)    NOT NULL,
+                telefone1               VARCHAR(20),
+                telefone2               VARCHAR(20),
+                telefone3               VARCHAR(20),
                 CONSTRAINT cliente_id_pk PRIMARY KEY (cliente_id)
 );
 
@@ -120,14 +120,14 @@ COMMENT ON COLUMN clientes.telefone2 IS 'Telefone secundário do cliente';
 
 COMMENT ON COLUMN clientes.telefone3 IS 'Telefone terciário  do cliente';
 
--- Criação da tabela clientes, com os dados individuais de cada cliente.
+-- Criação da tabela pedidos com os dados referente a cada pedido específico.
 
-CREATE TABLE    pedidos (
-                pedido_id 						NUMERIC(38) NOT NULL,
-                data_hora 						TIMESTAMP NOT NULL,
-                cliente_id 						NUMERIC(38) NOT NULL,
-                status 							VARCHAR(15) NOT NULL,
-                loja_id 						NUMERIC(38) NOT NULL,
+CREATE TABLE pedidos (
+                pedido_id               NUMERIC(38)     NOT NULL,
+                data_hora               TIMESTAMP       NOT NULL,
+                cliente_id              NUMERIC(38)     NOT NULL,
+                status                  VARCHAR(15)     NOT NULL,
+                loja_id                 NUMERIC(38)     NOT NULL,
                 CONSTRAINT pedido_id_pk PRIMARY KEY (pedido_id)
 );
 
@@ -141,29 +141,29 @@ COMMENT ON COLUMN pedidos.cliente_id IS 'Id do cliente';
 
 COMMENT ON COLUMN pedidos.status IS 'Status de andamento do pedido';
 
-COMMENT ON COLUMN pedidos.loja_id IS 'Id da loja';
+COMMENT ON COLUMN pedidos.loja_id IS 'Id da loja vendedora';
 
--- Criação da tabela pedidos, com os dados de cada pedido especificado.
+-- Criação da tabela lojas com todo o registro que cada loja precisa para operar.
 
-CREATE TABLE    lojas (
-                loja_id 						NUMERIC(38) NOT NULL,
-                nome 							VARCHAR(255) NOT NULL,
-                endereco_web 					        VARCHAR(100),
-                endereco_fisico 				        VARCHAR(512),
-                latitude 						NUMERIC,
-                longitude 						NUMERIC,
-                logo                                                    BYTEA,
-                logo_mime_type 					        VARCHAR(512),
-                logo_arquivo 					        VARCHAR(512),
-                logo_charset 					        VARCHAR(512),
-                logo_ultima_atualizacao 		                DATE,
-                pedido_id 						NUMERIC(38) NOT NULL,
+CREATE TABLE lojas (
+                loja_id                 NUMERIC(38)     NOT NULL,
+                nome                    VARCHAR(255)    NOT NULL,
+                endereco_web            VARCHAR(100),
+                endereco_fisico         VARCHAR(512),
+                latitude                NUMERIC,
+                longitude               NUMERIC,
+                logo                    BYTEA,
+                logo_mime_type          VARCHAR(512),
+                logo_arquivo            VARCHAR(512),
+                logo_charset            VARCHAR(512),
+                logo_ultima_atualizacao DATE,
+                pedido_id               NUMERIC(38)     NOT NULL,
                 CONSTRAINT loja_id_pk PRIMARY KEY (loja_id)
 );
 
-COMMENT ON TABLE lojas IS 'Tabela das lojas registradas';
+COMMENT ON TABLE lojas IS 'Lojas registradas no sistema';
 
-COMMENT ON COLUMN lojas.loja_id IS 'Id da loja registrada';
+COMMENT ON COLUMN lojas.loja_id IS 'Id da loja';
 
 COMMENT ON COLUMN lojas.nome IS 'Nome da loja';
 
@@ -171,9 +171,9 @@ COMMENT ON COLUMN lojas.endereco_web IS 'Link da loja na internet';
 
 COMMENT ON COLUMN lojas.endereco_fisico IS 'Endereço físico da loja';
 
-COMMENT ON COLUMN lojas.latitude IS 'Coordenada latitude';
+COMMENT ON COLUMN lojas.latitude IS 'Coordenada Latitude';
 
-COMMENT ON COLUMN lojas.longitude IS 'Coordenada longitude';
+COMMENT ON COLUMN lojas.longitude IS 'Coordenada Longitude';
 
 COMMENT ON COLUMN lojas.logo IS 'Logo da loja';
 
@@ -187,13 +187,13 @@ COMMENT ON COLUMN lojas.logo_ultima_atualizacao IS 'Última atualização da log
 
 COMMENT ON COLUMN lojas.pedido_id IS 'Id do pedido do cliente';
 
--- Criação da tabela lojas com todo o registro que cada loja precisa para operar.
+-- Criação da tabela estoques para cada loja ter controle de cada produto no estoque de cada loja.
 
-CREATE TABLE    estoques (
-                estoque_id 						NUMERIC(38) NOT NULL,
-                loja_id 						NUMERIC(38) NOT NULL,
-                produto_id 						NUMERIC(38) NOT NULL,
-                quantidade 						NUMERIC(38) NOT NULL,
+CREATE TABLE estoques (
+                estoque_id              NUMERIC(38)     NOT NULL,
+                loja_id                 NUMERIC(38)     NOT NULL,
+                produto_id              NUMERIC(38)     NOT NULL,
+                quantidade              NUMERIC(38)     NOT NULL,
                 CONSTRAINT estoque_id_pk PRIMARY KEY (estoque_id)
 );
 
@@ -203,21 +203,20 @@ COMMENT ON COLUMN estoques.estoque_id IS 'Id do estoque';
 
 COMMENT ON COLUMN estoques.loja_id IS 'Id da loja registrada';
 
-COMMENT ON COLUMN estoques.produto_id IS 'Id do produto';
+COMMENT ON COLUMN estoques.produto_id IS 'Id do produto (SKU)';
 
 COMMENT ON COLUMN estoques.quantidade IS 'Quantidade do produto em estoque';
 
--- Criação da tabela estoques para ter controle do estoque de cada produto de cada loja.
+-- Criação da tabela envios, da loja para controle dos envios.
 
-CREATE TABLE    envios (
-                envio_id 						NUMERIC(38) NOT NULL,
-                loja_id 						NUMERIC(38) NOT NULL,
-                cliente_id 						NUMERIC(38) NOT NULL,
-                endereco_entrega 				        VARCHAR(512) NOT NULL,
-                status 							VARCHAR(15) NOT NULL,
+CREATE TABLE envios (
+                envio_id                NUMERIC(38)     NOT NULL,
+                loja_id                 NUMERIC(38)     NOT NULL,
+                cliente_id              NUMERIC(38)     NOT NULL,
+                endereco_entrega        VARCHAR(512)    NOT NULL,
+                status                  VARCHAR(15)     NOT NULL,
                 CONSTRAINT envio_id_pk PRIMARY KEY (envio_id)
 );
-
 COMMENT ON TABLE envios IS 'Dados para entrega';
 
 COMMENT ON COLUMN envios.envio_id IS 'Id do envio';
@@ -230,19 +229,19 @@ COMMENT ON COLUMN envios.endereco_entrega IS 'Endereço de entrega do cliente';
 
 COMMENT ON COLUMN envios.status IS 'Status do andamento do envio';
 
--- Criação da tabela envios para controle dos envios dos pedidos.
+-- Criação da tabela referente aos itens presente no pedido.
 
 CREATE TABLE    pedidos_itens (
-                pedido_id 						NUMERIC(38) NOT NULL,
-                produto_id 						NUMERIC(38) NOT NULL,
-                numero_da_linha 				        NUMERIC(38) NOT NULL,
-                preco_unitario 					        NUMERIC(10,2) NOT NULL,
-                quantidade 						NUMERIC(38) NOT NULL,
-                envio_id 						NUMERIC(38),
+                pedido_id               NUMERIC(38)     NOT NULL,
+                produto_id              NUMERIC(38)     NOT NULL,
+                numero_da_linha         NUMERIC(38)     NOT NULL,
+                preco_unitario          NUMERIC(10,2)   NOT NULL,
+                quantidade              NUMERIC(38)     NOT NULL,
+                envio_id                NUMERIC(38)      NOT NULL,
                 CONSTRAINT pedido_id_pk_1 PRIMARY KEY (pedido_id, produto_id)
 );
 
-COMMENT ON TABLE pedidos_itens IS 'Tabela dos itens do pedido';
+COMMENT ON TABLE pedidos_itens IS 'Tabela dos itens presentes no pedido';
 
 COMMENT ON COLUMN pedidos_itens.pedido_id IS 'Id de pedido';
 
@@ -256,30 +255,28 @@ COMMENT ON COLUMN pedidos_itens.quantidade IS 'Quantidade de itens no pedido';
 
 COMMENT ON COLUMN pedidos_itens.envio_id IS 'Id do envio';
 
--- Criação da tabela pedidos para ver quais os itens que estão incluídos no pedido.
+-- Final da criação das tabelas e dos comentários nas tabelas.
 
--- Final da criação das tabelas e dos comentários.
+-- Constraint de checagem para verificação do status do pedido para ver tem um status válido.
 
 ALTER TABLE pedidos 
 ADD CONSTRAINT verif_status_pedidos
 CHECK (status IN ('CANCELADO', 'COMPLETO', 'ABERTO', 'PAGO', 'REEMBOLSADO', 'ENVIADO'));
 
--- Constraint de checagem para verificação do status do pedido para ver tem um status válido.
+-- Constraint para checar se o status do envio do pedido foi feito e checar a última atuaização.
 
 ALTER TABLE envios 
 ADD CONSTRAINT verif_status_envios
 CHECK (status IN ('CRIADO', 'ENVIADO', 'TRANSITO', 'ENTREGUE'));
 
--- Constraint para checar se o status do envio do pedido foi feito e checar a última atuaização.
-
+-- Constraint de checagem, ou o endereço físico está preenchido ou o endereço web está preenchido, não pode os dois estarem vazios.
 ALTER TABLE lojas
 ADD CONSTRAINT verif_endereco
 CHECK ((endereco_fisico IS NOT NULL AND endereco_web IS NULL) OR
        (endereco_fisico IS NULL AND endereco_web IS NOT NULL));
-      
--- Constraint de checagem, ou o endereço físico está preenchido ou o endereço web está preenchido, não pode os dois estarem vazios.
 
 -- Configuração das Primary Key's e Foreign Key's
+
 ALTER TABLE estoques ADD CONSTRAINT produtos_estoque_fk
 FOREIGN KEY (produto_id)
 REFERENCES produtos (produto_id)

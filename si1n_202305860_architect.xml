@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <architect-project version="1.0" appversion="1.0.9">
- <project-name>lojas correta</project-name>
+ <project-name>ARQUITETO RAFAEL HEHEE</project-name>
  <print-settings numCopies="1" zoom="1.0" pageNumbersPrinted="true" orientation="1" paperWidth="612.0" paperHeight="792.0" leftBorder="50.0" rightBorder="50.0" topBorder="50.0" bottomBorder="50.0" />
  <project-data-sources>
   <data-source id="DS0">
@@ -257,8 +257,8 @@
    <relationship id="REL72" populated="true" UUID="110e920a-4515-4300-b5ff-895f186bcd1d" deferrability="7" deleteRule="3" fk-table-ref="TAB18" fkCardinality="7" identifying="false" name="clientes_pedidos_fk" physicalName="clientes_pedidos_fk" pk-table-ref="TAB1" pkCardinality="2" updateRule="3" >
     <column-mapping id="CMP73" populated="true" UUID="a4017e20-8200-41b6-9591-63990933c9ae" fk-column-ref="COL21" name="Column Mapping" physicalName="Column Mapping" pk-column-ref="COL2" />
    </relationship>
-   <relationship id="REL74" populated="true" UUID="01faf35c-cdea-4408-9c78-a5b2b6aac135" deferrability="7" deleteRule="3" fk-table-ref="TAB60" fkCardinality="7" identifying="false" name="envios_pedidos_itens_fk" physicalName="envios_pedidos_itens_fk" pk-table-ref="TAB10" pkCardinality="2" updateRule="3" >
-    <column-mapping id="CMP75" populated="true" UUID="be234884-82ac-4a18-99e3-234494dab68d" fk-column-ref="COL66" name="Column Mapping" physicalName="Column Mapping" pk-column-ref="COL11" />
+   <relationship id="REL74" populated="true" UUID="01faf35c-cdea-4408-9c78-a5b2b6aac135" deferrability="7" deleteRule="3" fk-table-ref="TAB60" fkCardinality="7" identifying="false" name="envios_pedidos_itens_fk" physicalName="envios_pedidos_itens_fk" pk-table-ref="TAB10" pkCardinality="3" updateRule="3" >
+    <column-mapping id="CMP75" populated="true" UUID="ad685022-3273-4bcd-ae9b-0e280e5b1ca9" fk-column-ref="COL66" name="Column Mapping" physicalName="Column Mapping" pk-column-ref="COL11" />
    </relationship>
    <relationship id="REL76" populated="true" UUID="244c9c6e-83de-417a-80c6-73c0fae8bac9" deferrability="7" deleteRule="3" fk-table-ref="TAB26" fkCardinality="7" identifying="false" name="pedidos_lojas_fk" physicalName="pedidos_lojas_fk" pk-table-ref="TAB18" pkCardinality="2" updateRule="3" >
     <column-mapping id="CMP77" populated="true" UUID="a05b7912-487e-4a03-90fc-a2d5749a47fa" fk-column-ref="COL38" name="Column Mapping" physicalName="Column Mapping" pk-column-ref="COL19" />
