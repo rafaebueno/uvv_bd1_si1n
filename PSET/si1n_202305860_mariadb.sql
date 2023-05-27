@@ -1,16 +1,15 @@
 -- Deleta o banco de dados "uuv", se já estiver criado.
 DROP DATABASE IF EXISTS uvv;
 
--- Deleta o usuário "rafael_bueno", não importanto o host, se já tiver sido criado
-DROP USER IF EXISTS 'rafael_bueno'@'%';
-
 -- Comando para criar nova database nomeada uvv 
-CREATE DATABASE uvv 
-CHARACTER SET = 'UTF8'
-COMMENT 'Banco de dados escrito para o PSET em MariaDB/MySQL';;
+CREATE DATABASE uvv
+CHARACTER SET = 'UTF8';
 
 -- Comando para criar o user com liberdade para criar banco de dados 
-CREATE USER rafael_bueno@localhost;
+CREATE USER rafael_bueno IDENTIFIED BY 'rafael';
+
+GRANT CREATE, ALTER, DROP, REFERENCES, DELETE, UPDATE, INDEX, INSERT, SELECT 
+ON uvv.* TO rafael_bueno;
 
 -- Comando para entrar e usar o banco de dados criado anteriormente
 USE uvv;
@@ -22,8 +21,8 @@ CREATE TABLE produtos (
                 produto_id                  NUMERIC(38)     NOT NULL,
                 nome                        VARCHAR(255)    NOT NULL,
                 preco_unitario              NUMERIC(10,2)   NOT NULL,
-                detalhes LONGBLOB,
-                imagem LONGBLOB,
+                detalhes 					LONGBLOB,
+                imagem 						LONGBLOB,
                 imagem_mime_type            VARCHAR(512),
                 imagem_arquivo              VARCHAR(512)    NOT NULL,
                 imagem_charset              VARCHAR(512),
