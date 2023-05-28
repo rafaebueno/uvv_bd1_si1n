@@ -205,6 +205,23 @@ COMMENT ON COLUMN pedidos_itens.preco_unitario IS 'Preço unitário do produto';
 COMMENT ON COLUMN pedidos_itens.quantidade IS 'Quantidade de itens no pedido';
 COMMENT ON COLUMN pedidos_itens.envio_id IS 'Id do envio';
 
+-- Constraint de verificação status do pedido.
+
+ALTER TABLE pedidos
+ADD CONSTRAINT verif_status_pedidos
+CHECK (status IN ('COMPLETO', 'CANCELADO', 'REEMBOLSADO', 'ABERTO', 'PAGO', 'ENVIADO'));
+
+-- Constraint de verificação status do envio.
+ALTER TABLE envios
+ADD CONSTRAINT verif_status_envios
+CHECK (status IN ('TRANSITO', 'ENTREGUE', 'ENVIADO', 'CRIADO'));
+
+-- Constriant para verificar se ou o endereço físico ou o endereço web está preenchido, se nenhum dos dois estiverem, vai dar erro.
+ALTER TABLE lojas
+ADD CONSTRAINT verif_endereco
+CHECK ((endereco_fisico IS NOT NULL AND endereco_web IS NULL) OR
+       (endereco_fisico IS NULL AND endereco_web IS NOT NULL));
+
 -- Configuração das Primary Key's e Foreign Key's
 
 ALTER TABLE estoques ADD CONSTRAINT produtos_estoque_fk
