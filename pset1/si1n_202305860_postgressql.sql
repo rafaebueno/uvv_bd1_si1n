@@ -4,7 +4,7 @@
 -- Criei uma condicional para a exclusão do banco de dados UVV, caso já exista.
 DROP DATABASE IF EXISTS uvv;
 
--- Criei uma condicional para a exclusão do usuário, caso já exista.
+-- Criei uma condicional para a exclusão do usuário, caso já exista
 DROP USER IF EXISTS rafael_bueno;
 
 -- Criei meu usuário com a senha encriptada, já com o atributo de login e com a permissão de criação de banco de dados.
